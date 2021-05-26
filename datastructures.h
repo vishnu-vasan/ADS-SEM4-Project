@@ -16,7 +16,7 @@ struct product
 };
 
 class Store{
-    struct node:product{
+    struct node:public product{
         node *left, *right;
         node(int pid,string name, float p=9999.99, int qty=0):product(pid,name,p,qty){;}
     };
@@ -25,7 +25,7 @@ class Store{
 };
 
 class Cart{
-    struct node:product{
+    struct node:public product{
         node *left, *right;
         node(int pid,string name, float p=9999.99, int qty=0):product(pid,name,p,qty){;}
     };
