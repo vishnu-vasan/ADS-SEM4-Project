@@ -28,7 +28,7 @@ class Store
             right = NULL;
         }
     };
-    store_node *root;
+    store_node *s_root;
     string password = "admin_1234";
 
 public:
@@ -38,8 +38,8 @@ public:
     void add_item(const int &x, const string &s, const int &q, const float &p, store_node *&sn);
     void delete_item(const int &x);
     void delete_item(const int &x, store_node *&sn);
-    void add_quantity(const int &x, int quantity);
-    void add_quantity(const int &x, int quantity, store_node *&sn);
+    void add_quantity(const int &x, int &qty);
+    void add_quantity(const int &x, int &qty, store_node *&sn);
     int height(store_node *sn) const;
     void singlerotatewithleft(store_node *&k2);
     void singlerotatewithright(store_node *&k2);
@@ -49,6 +49,12 @@ public:
     void display();
     void print(store_node *&sn);
     void balance(store_node *&sn);
+    void remove_quantity(const int &x, int &qty);
+    void remove_quantity(const int &x, int &qty, store_node *&sn);
+    string check_quantity(const int &x, int &qty);
+    string check_quantity(const int &x, int &qty, store_node *&sn);
+    float get_price(const int &x);
+    float get_price(const int &x, store_node *&sn);
     store_node *findMin(store_node *&sn) const
     {
         if (sn == NULL)
@@ -95,4 +101,6 @@ public:
             return t;
         return findMin(t->left);
     }
+    int get_quantity(const int &x);
+    int get_quantity(const int &x, node *&t);
 };

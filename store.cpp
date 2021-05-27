@@ -4,7 +4,7 @@
 
 Store::Store()
 {
-    root = NULL;
+    s_root = NULL;
 }
 int Store::check_password(string entered_password)
 {
@@ -19,7 +19,7 @@ int Store::height(store_node *sn) const
 }
 void Store::add_item(const int &x, const string &s, const int &q, const float &p)
 {
-    add_item(x, s, q, p, root);
+    add_item(x, s, q, p, s_root);
 }
 
 void Store::add_item(const int &x, const string &s, const int &q, const float &p, store_node *&sn)
@@ -54,7 +54,7 @@ void Store::add_item(const int &x, const string &s, const int &q, const float &p
 }
 void Store::delete_item(const int &x)
 {
-    delete_item(x, root);
+    delete_item(x, s_root);
 }
 void Store::delete_item(const int &x, store_node *&sn)
 {
@@ -142,7 +142,7 @@ void Store::display()
     cout << "\n";
     cout << "Your Store\n";
     cout << "Product Id\tProduct Name\tQuantity\n";
-    print(root);
+    print(s_root);
 }
 
 void Store::print(store_node *&sn)
@@ -154,11 +154,11 @@ void Store::print(store_node *&sn)
         print(sn->right);
     }
 }
-void Store::add_quantity(const int &x, int quantity)
+void Store::add_quantity(const int &x, int &qty)
 {
-    add_quantity(x, quantity, root);
+    add_quantity(x, qty, s_root);
 }
-void Store::add_quantity(const int &x, int quantity, store_node *&sn)
+void Store::add_quantity(const int &x, int &qty, store_node *&sn)
 {
     if (sn == NULL)
     {
@@ -168,10 +168,74 @@ void Store::add_quantity(const int &x, int quantity, store_node *&sn)
     if (x == sn->productID)
     {
         cout << "Product found!!" << endl;
-        sn->quantity += quantity;
+        sn->quantity += qty;
     }
     else if (x < sn->productID)
-        add_quantity(x, quantity, sn->left);
+        add_quantity(x, qty, sn->left);
     else
-        add_quantity(x, quantity, sn->right);
+        add_quantity(x, qty, sn->right);
+}
+void Store::remove_quantity(const int &x, int &qty)
+{
+    remove_quantity(x, qty, s_root);
+}
+void Store::remove_quantity(const int &x, int &qty, store_node *&sn)
+{
+    if (sn == NULL)
+    {
+        cout << "Product not found\n";
+        return;
+    }
+    if (x == sn->productID)
+    {
+        cout << "Product found!!" << endl;
+        sn->quantity -= qty;
+    }
+    else if (x < sn->productID)
+        remove_quantity(x, qty, sn->left);
+    else
+        remove_quantity(x, qty, sn->right);
+}
+string Store::check_quantity(const int &x, int &qty)
+{
+    string s = check_quantity(x, qty, s_root);
+    return s;
+}
+string Store::check_quantity(const int &x, int &qty, store_node *&sn)
+{
+    if (sn == NULL)
+    {
+        return "-1";
+    }
+    if (x == sn->productID)
+    {
+        if (sn->quantity >= qty)
+            return sn->name;
+        else
+            return "";
+    }
+    else if (x < sn->productID)
+        remove_quantity(x, qty, sn->left);
+    else
+        remove_quantity(x, qty, sn->right);
+}
+float Store::get_price(const int &x)
+{
+    return get_price(x, s_root);
+}
+float Store::get_price(const int &x, store_node *&sn)
+{
+    if (sn == NULL)
+    {
+        cout << "Product not found\n";
+        return -1;
+    }
+    if (x == sn->productID)
+    {
+        return sn->price;
+    }
+    else if (x < sn->productID)
+        get_price(x, sn->left);
+    else
+        get_price(x, sn->right);
 }
