@@ -54,6 +54,7 @@ class Store
             return sn;
         return findMin(sn->left);
     }
+    product remove_root(store_node *&);
 
 public:
     Store();
@@ -65,6 +66,8 @@ public:
     void remove_quantity(const int &x, int &qty);
     string check_quantity(const int &x, int &qty);
     float get_price(const int &x);
+    void store_save();
+    void store_load();
 };
 
 class Cart
@@ -99,7 +102,6 @@ class Cart
     }
     void remove(const int &x, node *&t);
     void balance(node *&t);
-
 public:
     Cart();
     void insert(const int &x, const string &s, const int &q, const float &p);

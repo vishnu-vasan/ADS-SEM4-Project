@@ -1,23 +1,15 @@
 #include "proj.h"
 #include <iostream>
 #include <fstream>
+#define file_name "store.bin"
 
 using namespace std;
 
 Store::Store()
 {
     s_root = NULL;
-    // ifstream file;
-    // file.open("store.bin",ios::binary);
-    // product t;
-    // int n=0;
-    // while(file.read((char *)&t,sizeof(t))){
-    //     add_item(t.productID,t.name,t.quantity,t.price);
-    //     n++;
-    // }
-    // file.close();
-    // cout<<<<"Store: "<<n<<" records are retrieved from the database\n";
 }
+
 int Store::check_password(string entered_password)
 {
     if (password == entered_password)
@@ -253,4 +245,62 @@ float Store::get_price(const int &x, store_node *&sn)
     else
         cout << "Product not found\n";
     return -1;
+}
+
+product Store::remove_root(store_node *&sn)
+{
+    if (sn == NULL)
+    {
+        product p(-1, "");
+        return p;
+    }
+    else
+    {
+        product p(sn->productID, sn->name, sn->price, sn->quantity, sn->height);
+        store_node *oldNode = sn;
+        sn = (sn->left != NULL) ? sn->left : sn->right;
+        delete oldNode;
+        return p;
+    }
+}
+
+void Store::store_save()
+{
+    ofstream file(file_name,ios::binary);
+    product t;
+    int n=0;
+    while(s_root!=NULL)
+    {
+        t = remove_root(s_root);
+        file.write((char *)&t.productID,sizeof(int));
+        size_t s = t.name.length();
+        file.write((char *)&s,sizeof(size_t));
+        file.write(&t.name[0],s);
+        file.write((char *)&t.quantity,sizeof(int));
+        file.write((char *)&t.price,sizeof(float));
+        n++;
+    }
+    file.close();
+    cout<<"Store: "<<n<<" records stored into database\n";
+}
+
+void Store::store_load(){
+    int n=0;
+    ifstream file;
+    file.open(file_name,ios::binary);
+    if(file){
+        product t;
+        size_t s;
+        do{
+            file.read((char *)&t.productID,sizeof(int));
+            file.read((char *)&s,sizeof(s));
+            file.read(&t.name[0],s);
+            file.read((char *)&t.quantity,sizeof(int));
+            file.read((char *)&t.price,sizeof(float));
+            add_item(t.productID,t.name,t.quantity,t.price);
+            n++;
+        }while(!file.eof());
+    file.close();
+    }
+    cout<<"Store: "<<n<<" records are retrieved from the database\n";
 }

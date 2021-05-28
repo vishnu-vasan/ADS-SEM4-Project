@@ -1,11 +1,14 @@
 #include <iostream>
 using namespace std;
-#include "proj.h"
+// #include "proj.h"
+#include "store.cpp"
+#include "proj.cpp"
 
 int main()
 {
     Store st;
     Cart c;
+    st.store_load();
     while (1)
     {
         int choice;
@@ -144,6 +147,7 @@ int main()
         }
         else if (choice == 3)
         {
+            st.store_save();
             exit(0);
         }
         else
