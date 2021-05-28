@@ -1,8 +1,7 @@
 #include <iostream>
+#include <unordered_map>
 using namespace std;
-// #include "proj.h"
-#include "store.cpp"
-#include "proj.cpp"
+#include "proj.h"
 
 int main()
 {
@@ -12,6 +11,7 @@ int main()
     while (1)
     {
         int choice;
+        unordered_map<int,int> quantity;
         cout << "\nEnter the option:" << endl;
         cout << "1. Admin Login" << endl;
         cout << "2. User" << endl;
@@ -27,7 +27,7 @@ int main()
                 while (1)
                 {
                     int ch;
-                    cout << "1. Add new item" << endl;
+                    cout << "\n1. Add new item" << endl;
                     cout << "2. Delete item" << endl;
                     cout << "3. View Store" << endl;
                     cout << "4. Increase Quantity of an item" << endl;
@@ -36,17 +36,18 @@ int main()
                     if (ch == 1)
                     {
                         int pid, qty;
-                        string n;
+                        char s[25]; 
                         float price;
                         cout << "Enter Product ID: ";
                         cin >> pid;
                         cout << "Enter Product Name: ";
-                        cin >> n;
+                        cin.ignore();
+                        cin.getline(s,25,'\n');
                         cout << "Enter Product Cost(per item): ";
                         cin >> price;
                         cout << "Enter Quantity to add in store: ";
                         cin >> qty;
-                        st.add_item(pid, n, qty, price);
+                        st.add_item(pid, s, qty, price);
                     }
                     else if (ch == 2)
                     {
@@ -88,20 +89,21 @@ int main()
             while (1)
             {
                 int u;
-                cout << "1. Add items(search and add)" << endl;
+                
+                cout << "\n1. Add items(search and add)" << endl;
                 cout << "2. Delete items" << endl;
                 cout << "3. View Cart" << endl;
                 cout << "4. Checkout" << endl;
-                cout << "5. Exit" << endl;
+                cout << "5. Cancel Booking" << endl;
                 cin >> u;
                 if (u == 1)
                 {
+                    st.display();
                     int n, qt;
                     cout << "\nEnter the product ID: ";
                     cin >> n;
                     cout << "Enter quantity required: ";
                     cin >> qt;
-                    st.display();
                     string s = st.check_quantity(n, qt);
                     if (s == "" || s == "-1")
                     {
@@ -110,7 +112,8 @@ int main()
                     else
                     {
                         float p = st.get_price(n);
-                        c.insert(n, s, qt, qt * p); //p-price per item
+                        c.add_item(n, s, qt, p); 
+                        quantity.insert(make_pair(n,qt));
                         cout << endl
                             << "Product ID " << n << " added to the cart" << endl;
                         st.remove_quantity(n, qt);
@@ -122,7 +125,7 @@ int main()
                     cout << "\nEnter the product ID to be removed: ";
                     cin >> n;
                     int q = c.get_quantity(n);
-                    c.remove(n);
+                    c.delete_item(n);
                     cout << endl
                          << "Product ID " << n << " deleted from the cart" << endl;
                     st.add_quantity(n, q);
@@ -130,13 +133,23 @@ int main()
                 else if (u == 3)
                 {
                     cout << "\nYour cart is:" << endl;
-                    c.display();
+                    c.display_cart();
                 }
                 else if (u == 4)
                 {
                 }
                 else if (u == 5)
                 {
+                    // unordered_map<int,int>:: iterator itr;
+                    // for (itr = quantity.begin(); itr != quantity.end(); itr++)
+                    // {
+                    //     st.add_quantity(itr->first, itr->second);
+                    //     cout<< itr->first<< itr->second;
+                    //    cout<<"hi";
+                    // }        
+                    for (auto x : quantity)
+                        st.add_quantity(x.first, x.second);
+                    cout<<"\nBooking cancelled\n";
                     break;
                 }
                 else

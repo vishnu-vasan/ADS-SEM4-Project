@@ -304,3 +304,16 @@ void Store::store_load(){
     }
     cout<<"Store: "<<n<<" records are retrieved from the database\n";
 }
+
+//   dd-mm-yyyy_hh:mm:ss format
+
+//   time_t rawtime;
+//   struct tm * timeinfo;
+//   char buffer[80];
+//   time (&rawtime);
+//   timeinfo = localtime(&rawtime);
+//   string res="";
+//   strftime(buffer,sizeof(buffer),"%d-%m-%Y",timeinfo);
+//   string str(buffer);
+//   res=str+"_"+to_string(5+timeinfo->tm_hour)+":"+to_string(30+timeinfo->tm_min)+":"+to_string(timeinfo->tm_sec);
+//   cout<<res;

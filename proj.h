@@ -84,13 +84,13 @@ class Cart
     node *root;
 
     int height(node *t) const;
-    void insert(const int &x, const string &s, const int &q, const float &p, node *&t);
+    void add_item(const int &x, const string &s, const int &q, const float &p, node *&t);
     void singlerotatewithleft(node *&k2);
     void singlerotatewithright(node *&k2);
     void doublerotatewithleft(node *&k3);
     void doublerotatewithright(node *&k3);
     int max(int a, int b);
-    void print(node *&t);    
+    void display_cart(node *&t);    
     int get_quantity(const int &x, node *&t);
     node *findMin(node *t) const
     {
@@ -100,13 +100,13 @@ class Cart
             return t;
         return findMin(t->left);
     }
-    void remove(const int &x, node *&t);
-    void balance(node *&t);
+    void delete_item(const int &x, node *&t);
+    void balance_cart(node *&t);
 public:
     Cart();
-    void insert(const int &x, const string &s, const int &q, const float &p);
-    void display();
-    void remove(const int &x);
+    void add_item(const int &x, const string &s, const int &q, const float &p);
+    void display_cart();
+    void delete_item(const int &x);
     int get_quantity(const int &x);
     bool isEmpty();
 };
