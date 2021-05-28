@@ -1,6 +1,8 @@
 #include <iostream>
-using namespace std;
+#include <fstream>
 #include "proj.h"
+
+using namespace std;
 
 Cart::Cart()
 {
@@ -159,17 +161,20 @@ int Cart::get_quantity(const int &x)
 }
 int Cart::get_quantity(const int &x, node *&t)
 {
-    if (t == NULL)
+    if (t != NULL)
     {
-        cout << "Product not found\n";
-        return -1;
+        if (x == t->productID)
+            return t->quantity;
+        else if (x < t->productID)
+            get_quantity(x, t->left);
+        else
+            get_quantity(x, t->right);
     }
-    if (x == t->productID)
-    {
-        return t->quantity;
-    }
-    else if (x < t->productID)
-        get_quantity(x, t->left);
     else
-        get_quantity(x, t->right);
+        cout << "Product not found\n";
+    return -1;
+}
+
+bool Cart::isEmpty(){
+    return (root==NULL);
 }

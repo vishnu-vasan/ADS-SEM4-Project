@@ -1,10 +1,22 @@
 #include "proj.h"
-
 #include <iostream>
+#include <fstream>
+
+using namespace std;
 
 Store::Store()
 {
     s_root = NULL;
+    // ifstream file;
+    // file.open("store.bin",ios::binary);
+    // product t;
+    // int n=0;
+    // while(file.read((char *)&t,sizeof(t))){
+    //     add_item(t.productID,t.name,t.quantity,t.price);
+    //     n++;
+    // }
+    // file.close();
+    // cout<<n<<" records are retrieved from the database\n";
 }
 int Store::check_password(string entered_password)
 {
@@ -203,39 +215,42 @@ string Store::check_quantity(const int &x, int &qty)
 }
 string Store::check_quantity(const int &x, int &qty, store_node *&sn)
 {
-    if (sn == NULL)
+    if (sn != NULL)
     {
-        return "-1";
-    }
-    if (x == sn->productID)
-    {
-        if (sn->quantity >= qty)
-            return sn->name;
+        if (x == sn->productID)
+        {
+            if (sn->quantity >= qty)
+                return sn->name;
+            else
+                return "";
+        }
+        else if (x < sn->productID)
+            remove_quantity(x, qty, sn->left);
         else
-            return "";
+            remove_quantity(x, qty, sn->right);
     }
-    else if (x < sn->productID)
-        remove_quantity(x, qty, sn->left);
-    else
-        remove_quantity(x, qty, sn->right);
+    return "-1";
 }
+
 float Store::get_price(const int &x)
 {
     return get_price(x, s_root);
 }
+
 float Store::get_price(const int &x, store_node *&sn)
 {
-    if (sn == NULL)
+    if (sn != NULL)
     {
-        cout << "Product not found\n";
-        return -1;
+        if (x == sn->productID)
+        {
+            return sn->price;
+        }
+        else if (x < sn->productID)
+            get_price(x, sn->left);
+        else
+            get_price(x, sn->right);    
     }
-    if (x == sn->productID)
-    {
-        return sn->price;
-    }
-    else if (x < sn->productID)
-        get_price(x, sn->left);
     else
-        get_price(x, sn->right);
+        cout << "Product not found\n";
+    return -1;
 }

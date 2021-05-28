@@ -1,17 +1,14 @@
 #include <iostream>
 using namespace std;
 #include "proj.h"
-// #include "proj.cpp"
-// #include "store.cpp"
 
 int main()
 {
-
+    Store st;
+    Cart c;
     while (1)
     {
         int choice;
-        Store st;
-        Cart c;
         cout << "\nEnter the option:" << endl;
         cout << "1. Admin Login" << endl;
         cout << "2. User" << endl;
@@ -101,19 +98,20 @@ int main()
                     cin >> n;
                     cout << "Enter quantity required: ";
                     cin >> qt;
+                    st.display();
                     string s = st.check_quantity(n, qt);
-                    // if (s == "" || s == "-1")
-                    // {
-                    //     cout << "Product not found in store / out of stock\n";
-                    // }
-                    // else
-                    // {
-                    float p = st.get_price(n);
-                    c.insert(n, s, qt, qt * p); //p-price per item
-                    cout << endl
-                         << "Product ID " << n << " added to the cart" << endl;
-                    st.remove_quantity(n, qt);
-                    //}
+                    if (s == "" || s == "-1")
+                    {
+                        cout << "Product not found in store / out of stock\n";
+                    }
+                    else
+                    {
+                        float p = st.get_price(n);
+                        c.insert(n, s, qt, qt * p); //p-price per item
+                        cout << endl
+                            << "Product ID " << n << " added to the cart" << endl;
+                        st.remove_quantity(n, qt);
+                    }
                 }
                 else if (u == 2)
                 {

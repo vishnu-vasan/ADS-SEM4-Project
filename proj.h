@@ -1,13 +1,14 @@
 #include <string>
-
 using namespace std;
+#ifndef PROJ_H_
+#define PROJ_H_
 
 struct product
 {
     int productID, quantity, height;
     string name;
     float price;
-    product(int pid, string name, float p = 9999.99, int qty = 0, int h = -1)
+    product(int pid=0, string name="", float p = 9999.99, int qty = 0, int h = -1)
     {
         productID = pid;
         this->name = name;
@@ -31,14 +32,8 @@ class Store
     store_node *s_root;
     string password = "admin_1234";
 
-public:
-    Store();
-    int check_password(string entered_password);
-    void add_item(const int &x, const string &s, const int &q, const float &p);
     void add_item(const int &x, const string &s, const int &q, const float &p, store_node *&sn);
-    void delete_item(const int &x);
     void delete_item(const int &x, store_node *&sn);
-    void add_quantity(const int &x, int &qty);
     void add_quantity(const int &x, int &qty, store_node *&sn);
     int height(store_node *sn) const;
     void singlerotatewithleft(store_node *&k2);
@@ -46,14 +41,10 @@ public:
     void doublerotatewithleft(store_node *&k3);
     void doublerotatewithright(store_node *&k3);
     int max(int a, int b);
-    void display();
     void print(store_node *&sn);
     void balance(store_node *&sn);
-    void remove_quantity(const int &x, int &qty);
     void remove_quantity(const int &x, int &qty, store_node *&sn);
-    string check_quantity(const int &x, int &qty);
     string check_quantity(const int &x, int &qty, store_node *&sn);
-    float get_price(const int &x);
     float get_price(const int &x, store_node *&sn);
     store_node *findMin(store_node *&sn) const
     {
@@ -63,6 +54,17 @@ public:
             return sn;
         return findMin(sn->left);
     }
+
+public:
+    Store();
+    int check_password(string entered_password);
+    void add_item(const int &x, const string &s, const int &q, const float &p);
+    void delete_item(const int &x);
+    void add_quantity(const int &x, int &qty);
+    void display();
+    void remove_quantity(const int &x, int &qty);
+    string check_quantity(const int &x, int &qty);
+    float get_price(const int &x);
 };
 
 class Cart
@@ -78,9 +80,6 @@ class Cart
     };
     node *root;
 
-public:
-    Cart();
-    void insert(const int &x, const string &s, const int &q, const float &p);
     int height(node *t) const;
     void insert(const int &x, const string &s, const int &q, const float &p, node *&t);
     void singlerotatewithleft(node *&k2);
@@ -88,11 +87,8 @@ public:
     void doublerotatewithleft(node *&k3);
     void doublerotatewithright(node *&k3);
     int max(int a, int b);
-    void display();
-    void print(node *&t);
-    void remove(const int &x);
-    void remove(const int &x, node *&t);
-    void balance(node *&t);
+    void print(node *&t);    
+    int get_quantity(const int &x, node *&t);
     node *findMin(node *t) const
     {
         if (t == NULL)
@@ -101,6 +97,16 @@ public:
             return t;
         return findMin(t->left);
     }
+    void remove(const int &x, node *&t);
+    void balance(node *&t);
+
+public:
+    Cart();
+    void insert(const int &x, const string &s, const int &q, const float &p);
+    void display();
+    void remove(const int &x);
     int get_quantity(const int &x);
-    int get_quantity(const int &x, node *&t);
+    bool isEmpty();
 };
+
+#endif
