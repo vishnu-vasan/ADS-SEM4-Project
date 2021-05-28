@@ -16,7 +16,7 @@ Store::Store()
     //     n++;
     // }
     // file.close();
-    // cout<<n<<" records are retrieved from the database\n";
+    // cout<<<<"Store: "<<n<<" records are retrieved from the database\n";
 }
 int Store::check_password(string entered_password)
 {
