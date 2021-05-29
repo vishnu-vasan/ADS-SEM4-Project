@@ -1,6 +1,7 @@
 #include <iostream>
 #include <fstream>
 #include "proj.h"
+#include <iomanip>
 
 using namespace std;
 
@@ -93,19 +94,55 @@ int Cart::max(int a, int b)
 void Cart::display_cart()
 {
     cout << "\n";
-    cout << "Your cart\n";
-    cout << "Product Id\tProduct Name\tQuantity\tTotal amount(per item)\n";
-    display_cart(root);
+    cout << "Your cart\n\n";
+    cout <<"Product Id  |"<<setw(30)<<"Product Name  |"<<"  Quantity  |"<<" Total Price \n";
+    cout<<"---------------------------------------------------------------------\n";
+    float bill = display_cart(root);
+    cout<<"Total Amount: "<<bill<<"\n";
 }
 
-void Cart::display_cart(node *&t)
+float Cart::display_cart(node *&t, ostream &out)
 {
+    float tot = 0;
     if (t != NULL)
     {
-        cout << t->productID << "\t\t" << t->name << "\t\t" << t->quantity << "\t\t" << t->quantity * t->price << endl;
-        display_cart(t->left);
-        display_cart(t->right);
+        out <<setw(10)<< t->productID<<"  |"<<setw(27)<< t->name <<"  |"<< setw(10)<< t->quantity <<"  | "<< t->quantity*t->price << endl;
+        tot += display_cart(t->left,out);
+        tot += display_cart(t->right,out);
+        tot += t->quantity*t->price;
+        return tot;
     }
+    return 0;
+}
+
+void Cart::generate_bill(){
+    string name, phoneno;
+    cout<<"Enter Name: ";
+    cin.ignore();
+    getline(cin,name);
+    cout<<"Enter Phone Number: ";
+    getline(cin,phoneno);
+    //   dd-mm-yyyy_hh:mm:ss format
+    time_t rawtime;
+    struct tm * timeinfo;
+    char buffer[80];
+    time (&rawtime);
+    timeinfo = localtime(&rawtime);
+    string res="";
+    strftime(buffer,sizeof(buffer),"%d-%m-%Y",timeinfo);
+    string str(buffer);
+    res=str+"_"+to_string(5+timeinfo->tm_hour)+":"+to_string(30+timeinfo->tm_min)+":"+to_string(timeinfo->tm_sec);
+    res.append(".txt");
+    ofstream fout(res.data());
+    fout<<setprecision(2)<<fixed;
+    fout<<"\t\tBill "<<"\n\n";
+    fout<<"Name: "<<name<<"\n";
+    fout<<"Phone No:"<<phoneno<<"\n\n";
+    fout <<"Product Id  |"<<setw(30)<<"Product Name  |"<<"  Quantity  |"<<" Total Price \n";
+    fout<<"---------------------------------------------------------------------\n";
+    float bill = display_cart(root,fout);
+    fout<<"\nTotal Amount: "<<bill<<"\n";
+    fout.close();
 }
 
 void Cart::delete_item(const int &x)

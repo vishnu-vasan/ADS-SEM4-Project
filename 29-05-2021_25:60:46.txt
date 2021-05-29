@@ -1,0 +1,11 @@
+Bill 
+
+Name: Adhitya Raj
+Phone No:9876543210
+
+Product Id  |               Product Name  |  Quantity  | Total Price 
+---------------------------------------------------------------------
+         2  |                     Carrot  |         2  | 6
+         1  |                     Banana  |         5  | 25
+
+Total Amount: 31

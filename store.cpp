@@ -1,6 +1,9 @@
 #include "proj.h"
 #include <iostream>
 #include <fstream>
+#include <iomanip>
+#include <string.h>
+
 #define file_name "store.bin"
 
 using namespace std;
@@ -144,8 +147,9 @@ int Store::max(int a, int b)
 void Store::display()
 {
     cout << "\n";
-    cout << "Your Store\n";
-    cout << "Product Id\tProduct Name\tQuantity\n";
+    cout << "Inventory:\n\n";
+    cout <<"Product Id  |"<<setw(28)<<"Product Name  |"<<"  Quantity  | "<<"Price\n";
+    cout<<"---------------------------------------------------------------\n";
     print(s_root);
 }
 
@@ -153,7 +157,7 @@ void Store::print(store_node *&sn)
 {
     if (sn != NULL)
     {
-        cout << sn->productID << "\t\t" << sn->name << "\t\t" << sn->quantity << endl;
+        cout <<setw(11)<< sn->productID<<" | "<<setw(25)<< sn->name<<" |"<<setw(10)<< sn->quantity<<"  | "<<sn->price<< endl;
         print(sn->left);
         print(sn->right);
     }
@@ -171,7 +175,7 @@ void Store::add_quantity(const int &x, int &qty, store_node *&sn)
     }
     if (x == sn->productID)
     {
-        cout << "Product found!!" << endl;
+        // cout << "Product found" << endl;
         sn->quantity += qty;
     }
     else if (x < sn->productID)
@@ -217,9 +221,9 @@ string Store::check_quantity(const int &x, int &qty, store_node *&sn)
                 return "";
         }
         else if (x < sn->productID)
-            remove_quantity(x, qty, sn->left);
+            return check_quantity(x, qty, sn->left);
         else
-            remove_quantity(x, qty, sn->right);
+            return check_quantity(x, qty, sn->right);
     }
     return "-1";
 }
@@ -238,20 +242,32 @@ float Store::get_price(const int &x, store_node *&sn)
             return sn->price;
         }
         else if (x < sn->productID)
-            get_price(x, sn->left);
+            return get_price(x, sn->left);
         else
-            get_price(x, sn->right);    
+            return get_price(x, sn->right);    
     }
     else
         cout << "Product not found\n";
     return -1;
 }
 
-product Store::remove_root(store_node *&sn)
+product Store::remove_root()
+{
+    return remove_root(s_root->productID, s_root);
+}
+
+product Store::remove_root(const int &x, store_node *&sn)
 {
     if (sn == NULL)
     {
         product p(-1, "");
+        return p;
+    }
+    else if (sn->left != NULL && sn->right != NULL)
+    {
+        product p(sn->productID, sn->name, sn->price, sn->quantity, sn->height);
+        sn->productID = findMin(sn->right)->productID;
+        delete_item(sn->productID, sn->right);
         return p;
     }
     else
@@ -266,18 +282,26 @@ product Store::remove_root(store_node *&sn)
 
 void Store::store_save()
 {
+    struct prod{
+        int pid;
+        char name[25];
+        int qty;
+        float price;
+    } p;
+    remove(file_name);
     ofstream file(file_name,ios::binary);
     product t;
+    char name[25];
     int n=0;
     while(s_root!=NULL)
     {
-        t = remove_root(s_root);
-        file.write((char *)&t.productID,sizeof(int));
-        size_t s = t.name.length();
-        file.write((char *)&s,sizeof(size_t));
-        file.write(&t.name[0],s);
-        file.write((char *)&t.quantity,sizeof(int));
-        file.write((char *)&t.price,sizeof(float));
+        t = remove_root();
+        p.pid = t.productID;
+        t.name.copy(p.name,t.name.length(),0);
+        p.name[t.name.length()]='\0';
+        p.price = t.price;
+        p.qty = t.quantity;
+        file.write((char *)&p,sizeof(p));
         n++;
     }
     file.close();
@@ -285,35 +309,28 @@ void Store::store_save()
 }
 
 void Store::store_load(){
+    struct prod{
+        int pid;
+        char name[25];
+        int qty;
+        float price;
+    } p;
     int n=0;
     ifstream file;
+    char name[25];
     file.open(file_name,ios::binary);
     if(file){
         product t;
         size_t s;
-        do{
-            file.read((char *)&t.productID,sizeof(int));
-            file.read((char *)&s,sizeof(s));
-            file.read(&t.name[0],s);
-            file.read((char *)&t.quantity,sizeof(int));
-            file.read((char *)&t.price,sizeof(float));
+        while(file.read((char *)&p,sizeof(p))){
+            t.productID = p.pid;
+            t.name.assign(p.name);
+            t.quantity = p.qty;
+            t.price = p.price;
             add_item(t.productID,t.name,t.quantity,t.price);
             n++;
-        }while(!file.eof());
+        }
     file.close();
     }
     cout<<"Store: "<<n<<" records are retrieved from the database\n";
 }
-
-//   dd-mm-yyyy_hh:mm:ss format
-
-//   time_t rawtime;
-//   struct tm * timeinfo;
-//   char buffer[80];
-//   time (&rawtime);
-//   timeinfo = localtime(&rawtime);
-//   string res="";
-//   strftime(buffer,sizeof(buffer),"%d-%m-%Y",timeinfo);
-//   string str(buffer);
-//   res=str+"_"+to_string(5+timeinfo->tm_hour)+":"+to_string(30+timeinfo->tm_min)+":"+to_string(timeinfo->tm_sec);
-//   cout<<res;

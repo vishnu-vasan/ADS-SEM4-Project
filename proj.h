@@ -31,7 +31,8 @@ class Store
     };
     store_node *s_root;
     string password = "admin_1234";
-
+    product remove_root();
+    product remove_root(const int &x, store_node *&sn);
     void add_item(const int &x, const string &s, const int &q, const float &p, store_node *&sn);
     void delete_item(const int &x, store_node *&sn);
     void add_quantity(const int &x, int &qty, store_node *&sn);
@@ -90,7 +91,7 @@ class Cart
     void doublerotatewithleft(node *&k3);
     void doublerotatewithright(node *&k3);
     int max(int a, int b);
-    void display_cart(node *&t);    
+    float display_cart(node *&t, ostream &out=cout);    
     int get_quantity(const int &x, node *&t);
     node *findMin(node *t) const
     {
@@ -108,6 +109,7 @@ public:
     void display_cart();
     void delete_item(const int &x);
     int get_quantity(const int &x);
+    void generate_bill();
     bool isEmpty();
 };
 
