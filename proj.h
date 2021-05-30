@@ -55,7 +55,6 @@ class Store
             return sn;
         return findMin(sn->left);
     }
-    product remove_root(store_node *&);
 
 public:
     Store();
