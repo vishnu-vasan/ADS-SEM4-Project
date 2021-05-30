@@ -59,11 +59,11 @@ void Store::add_item(const int &x, const string &s, const int &q, const float &p
     }
     sn->height = max(height(sn->left), height(sn->right)) + 1;
 }
-void Store::delete_item(const int &x)
+void Store::delete_item(const int &x, int b)
 {
-    delete_item(x, s_root);
+    delete_item(x, s_root, b);
 }
-void Store::delete_item(const int &x, store_node *&sn)
+void Store::delete_item(const int &x, store_node *&sn, int b)
 {
     if (sn == NULL)
         return;
@@ -84,7 +84,8 @@ void Store::delete_item(const int &x, store_node *&sn)
         delete oldNode;
     }
     balance(sn);
-    cout << "Product ID " << x << " removed from store\n\n";
+    if (!b)
+        cout << "Product ID " << x << " removed from store\n\n";
 }
 void Store::balance(store_node *&sn)
 {
@@ -148,8 +149,10 @@ void Store::display()
 {
     cout << "\n";
     cout << "Inventory:\n\n";
-    cout <<"Product Id  |"<<setw(28)<<"Product Name  |"<<"  Quantity  | "<<"Price\n";
-    cout<<"---------------------------------------------------------------\n";
+    cout << "Product Id  |" << setw(28) << "Product Name  |"
+         << "  Quantity  | "
+         << "Price\n";
+    cout << "---------------------------------------------------------------\n";
     print(s_root);
 }
 
@@ -157,8 +160,8 @@ void Store::print(store_node *&sn)
 {
     if (sn != NULL)
     {
-        cout <<setw(11)<< sn->productID<<" | "<<setw(25)<< sn->name<<" |"<<setw(10)<< sn->quantity<<"  | "<<sn->price<< endl;
         print(sn->left);
+        cout << setw(11) << sn->productID << " | " << setw(25) << sn->name << " |" << setw(10) << sn->quantity << "  | " << sn->price << endl;
         print(sn->right);
     }
 }
@@ -244,7 +247,7 @@ float Store::get_price(const int &x, store_node *&sn)
         else if (x < sn->productID)
             return get_price(x, sn->left);
         else
-            return get_price(x, sn->right);    
+            return get_price(x, sn->right);
     }
     else
         cout << "Product not found\n";
@@ -266,8 +269,13 @@ product Store::remove_root(const int &x, store_node *&sn)
     else if (sn->left != NULL && sn->right != NULL)
     {
         product p(sn->productID, sn->name, sn->price, sn->quantity, sn->height);
-        sn->productID = findMin(sn->right)->productID;
-        delete_item(sn->productID, sn->right);
+        store_node *temp;
+        temp = findMin(sn->right);
+        sn->productID = temp->productID;
+        sn->name = temp->name;
+        sn->price = temp->price;
+        sn->quantity = temp->quantity;
+        delete_item(sn->productID, sn->right, 1);
         return p;
     }
     else
@@ -282,55 +290,60 @@ product Store::remove_root(const int &x, store_node *&sn)
 
 void Store::store_save()
 {
-    struct prod{
+    struct prod
+    {
         int pid;
         char name[25];
         int qty;
         float price;
     } p;
     remove(file_name);
-    ofstream file(file_name,ios::binary);
+    ofstream file(file_name, ios::binary);
     product t;
     char name[25];
-    int n=0;
-    while(s_root!=NULL)
+    int n = 0;
+    while (s_root != NULL)
     {
         t = remove_root();
         p.pid = t.productID;
-        t.name.copy(p.name,t.name.length(),0);
-        p.name[t.name.length()]='\0';
+        t.name.copy(p.name, t.name.length(), 0);
+        p.name[t.name.length()] = '\0';
         p.price = t.price;
         p.qty = t.quantity;
-        file.write((char *)&p,sizeof(p));
+        file.write((char *)&p, sizeof(p));
         n++;
     }
     file.close();
-    cout<<"Store: "<<n<<" records stored into database\n";
+    cout << "Store: " << n << " records stored into database\n";
 }
 
-void Store::store_load(){
-    struct prod{
+void Store::store_load()
+{
+    struct prod
+    {
         int pid;
         char name[25];
         int qty;
         float price;
     } p;
-    int n=0;
+    int n = 0;
     ifstream file;
     char name[25];
-    file.open(file_name,ios::binary);
-    if(file){
+    file.open(file_name, ios::binary);
+    if (file)
+    {
         product t;
         size_t s;
-        while(file.read((char *)&p,sizeof(p))){
+        while (file.read((char *)&p, sizeof(p)))
+        {
             t.productID = p.pid;
             t.name.assign(p.name);
             t.quantity = p.qty;
             t.price = p.price;
-            add_item(t.productID,t.name,t.quantity,t.price);
+            add_item(t.productID, t.name, t.quantity, t.price);
             n++;
         }
-    file.close();
+        file.close();
     }
-    cout<<"Store: "<<n<<" records are retrieved from the database\n";
+    cout << "Store: " << n << " records are retrieved from the database\n";
 }

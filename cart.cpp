@@ -106,8 +106,8 @@ float Cart::display_cart(node *&t, ostream &out)
     float tot = 0;
     if (t != NULL)
     {
+        tot += display_cart(t->left, out);
         out <<setw(10)<< t->productID<<"  |"<<setw(27)<< t->name <<"  |"<< setw(10)<< t->quantity <<"  | "<< t->quantity*t->price << endl;
-        tot += display_cart(t->left,out);
         tot += display_cart(t->right,out);
         tot += t->quantity*t->price;
         return tot;

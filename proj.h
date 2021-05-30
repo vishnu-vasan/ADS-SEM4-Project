@@ -8,7 +8,7 @@ struct product
     int productID, quantity, height;
     string name;
     float price;
-    product(int pid=0, string name="", float p = 9999.99, int qty = 0, int h = -1)
+    product(int pid = 0, string name = "", float p = 9999.99, int qty = 0, int h = -1)
     {
         productID = pid;
         this->name = name;
@@ -34,7 +34,7 @@ class Store
     product remove_root();
     product remove_root(const int &x, store_node *&sn);
     void add_item(const int &x, const string &s, const int &q, const float &p, store_node *&sn);
-    void delete_item(const int &x, store_node *&sn);
+    void delete_item(const int &x, store_node *&sn, int b = 0);
     void add_quantity(const int &x, int &qty, store_node *&sn);
     int height(store_node *sn) const;
     void singlerotatewithleft(store_node *&k2);
@@ -61,7 +61,7 @@ public:
     Store();
     int check_password(string entered_password);
     void add_item(const int &x, const string &s, const int &q, const float &p);
-    void delete_item(const int &x);
+    void delete_item(const int &x, int b = 0);
     void add_quantity(const int &x, int &qty);
     void display();
     void remove_quantity(const int &x, int &qty);
@@ -91,7 +91,7 @@ class Cart
     void doublerotatewithleft(node *&k3);
     void doublerotatewithright(node *&k3);
     int max(int a, int b);
-    float display_cart(node *&t, ostream &out=cout);    
+    float display_cart(node *&t, ostream &out = cout);
     int get_quantity(const int &x, node *&t);
     node *findMin(node *t) const
     {
@@ -103,6 +103,7 @@ class Cart
     }
     void delete_item(const int &x, node *&t);
     void balance_cart(node *&t);
+
 public:
     Cart();
     void add_item(const int &x, const string &s, const int &q, const float &p);
