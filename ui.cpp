@@ -142,42 +142,45 @@ void cart_ui(Store &st, Cart &c)
             getch();
             break;
         case 4:
-            for (auto x : quantity)
-            {
-                st.add_quantity(x.first, x.second);
-                c.delete_item(x.first);
-            }
-            cout << "\nCart cleared\n";
-            break;
-        case 5:
-            c.display_cart();
-            cout << "Confirm order:\n1. Yes\n2. No\n: ";
-            cin >> n;
-            switch (n)
-            {
-            case 1:
-                c.generate_bill();
+            if(!c.isEmpty()){
                 for (auto x : quantity)
                 {
+                    st.add_quantity(x.first, x.second);
                     c.delete_item(x.first);
                 }
-                cout << "Order Confirmed\nPress any key to go back to main menu\n";
-                // getch();
-                getchar();
-                exit = true;
-                checkout = true;
-                ;
-                break;
-            case 2:;
-                break;
-            default:
-                cout << "Error: Invalid choice!\n";
-                cout << "Press any key to continue\n";
-                getch();
+                cout << "\nCart cleared\n";
+            }
+            break;
+        case 5:
+            if(!c.isEmpty()){
+                c.display_cart();
+                cout << "Confirm order:\n1. Yes\n2. No\n: ";
+                cin >> n;
+                switch (n)
+                {
+                case 1:
+                    c.generate_bill();
+                    for (auto x : quantity)
+                    {
+                        c.delete_item(x.first);
+                    }
+                    cout << "Order Confirmed\nPress any key to go back to main menu\n";
+                    getchar();
+                    exit = true;
+                    checkout = true;
+                    ;
+                    break;
+                case 2:;
+                    break;
+                default:
+                    cout << "Error: Invalid choice!\n";
+                    cout << "Press any key to continue\n";
+                    getch();
+                }
             }
             break;
         case 6:
-            if (!checkout)
+            if (!checkout && !c.isEmpty())
             {
                 cout << "Confirm order:\n1. Yes\n2. No\n: ";
                 cin >> n;
