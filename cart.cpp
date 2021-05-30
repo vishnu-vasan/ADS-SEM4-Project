@@ -131,7 +131,7 @@ void Cart::generate_bill(){
     string res="";
     strftime(buffer,sizeof(buffer),"%d-%m-%Y",timeinfo);
     string str(buffer);
-    res=str+"_"+to_string(5+timeinfo->tm_hour)+":"+to_string(30+timeinfo->tm_min)+":"+to_string(timeinfo->tm_sec);
+    res=str+"_"+to_string(timeinfo->tm_hour)+":"+to_string(timeinfo->tm_min)+":"+to_string(timeinfo->tm_sec);
     res.append(".txt");
     ofstream fout(res.data());
     fout<<setprecision(2)<<fixed;
