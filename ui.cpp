@@ -157,6 +157,10 @@ void cart_ui(Store &st, Cart &c)
             {
             case 1:
                 c.generate_bill();
+                for (auto x : quantity)
+                {
+                    c.delete_item(x.first);
+                }
                 cout << "Order Confirmed\nPress any key to go back to main menu\n";
                 // getch();
                 getchar();
