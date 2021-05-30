@@ -134,6 +134,7 @@ void cart_ui(Store &st, Cart &c)
             cout << endl
                  << "Product ID " << n << " deleted from the cart" << endl;
             st.add_quantity(n, qt);
+            quantity.erase(n);
             break;
         case 3:
             cout << "\nYour cart is:" << endl;

@@ -74,7 +74,11 @@ void Store::delete_item(const int &x, store_node *&sn, int b)
         delete_item(x, sn->right);
     else if (sn->left != NULL && sn->right != NULL)
     {
-        sn->productID = findMin(sn->right)->productID;
+        store_node *temp = findMin(sn->right);
+        sn->productID = temp->productID;
+        sn->name = temp->name;
+        sn->price = temp->price;
+        sn->quantity = temp->quantity;
         delete_item(sn->productID, sn->right);
     }
     else

@@ -161,7 +161,11 @@ void Cart::delete_item(const int &x, node *&t)
         delete_item(x, t->right);
     else if (t->left != NULL && t->right != NULL)
     {
-        t->productID = findMin(t->right)->productID;
+        node *temp = findMin(t->right);
+        t->productID = temp->productID;
+        t->name = temp->name;
+        t->price = temp->price;
+        t->quantity = temp->quantity;
         delete_item(t->productID, t->right);
     }
     else
